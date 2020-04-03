@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 import { createStorexHubSocketClient } from '@worldbrain/storex-hub/lib/client'
 import { Application } from './application'
 import { FileSettingsStore, SettingsManager } from './settings'
-import { ArweavePageArchiver } from './page-archiver'
+import { ArweavePageArchiver, MemoryPageArchiver } from './page-archiver'
 
 function requireEnvVar(key: string) {
     const value = process.env[key]
@@ -23,8 +23,13 @@ export async function main(options?: {
     console.log('Connecting to Storex Hub')
 
     const settingsManager = new SettingsManager(new FileSettingsStore(configPath), {})
-    const pageArchiver = new ArweavePageArchiver({ settingsManager })
-    await pageArchiver.setup()
+    const whichPageArchiver = process.env.PAGE_ARCHIVER === 'memory' ? 'memory' : 'arweave'
+    const pageArchiver = whichPageArchiver === 'memory'
+        ? new MemoryPageArchiver()
+        : new ArweavePageArchiver({ settingsManager })
+    if (whichPageArchiver === 'arweave') {
+        await (pageArchiver as ArweavePageArchiver).setup()
+    }
     const application = new Application({
         settingsManager,
         pageArchiver

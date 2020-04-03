@@ -16,7 +16,7 @@
   "dependencies": {
     "@worldbrain/storex": "^0.4.1",
     "@worldbrain/storex-middleware-change-watcher": "^0.1.1",
-    "@worldbrain/storex-hub": "^0.2.1",
+    "@worldbrain/storex-hub": "^0.3.1",
     "@worldbrain/memex-storex-hub": "^0.1.2",
     "arweave": "1.6.0",
     "socket.io-client": "^2.3.0",
