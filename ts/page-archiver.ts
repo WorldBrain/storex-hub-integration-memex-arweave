@@ -42,11 +42,15 @@ export class ArweavePageArchiver implements PageArchiver {
     }
 
     async archivePage(page: Page) {
-        const dataToSend = JSON.stringify(page);
-        const transaction = await this.arweave.createTransaction({ data: dataToSend }, this.key!);
-        await this.arweave.transactions.sign(transaction, this.key!);
-        await this.arweave.transactions.post(transaction);
-        return {}
+        const dataToSend = JSON.stringify(page)
+        const transaction = await this.arweave.createTransaction({ data: dataToSend }, this.key!)
+        await this.arweave.transactions.sign(transaction, this.key!)
+        await this.arweave.transactions.post(transaction)
+        console.log('Page archived to Arweave:')
+        console.log('- URL:', page.fullUrl)
+        console.log('- Transaction:', transaction.id)
+
+        return { txid: transaction.id }
     }
 }
 

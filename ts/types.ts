@@ -7,7 +7,7 @@ export interface Settings {
 }
 
 export interface ArchivedPage {
-
+    txid?: string
 }
 
 export interface SettingsStore {

@@ -112,6 +112,7 @@ export class Application {
         this.logger(`Identifying with Storex Hub as '${APP_NAME}'`)
         const accessToken = this.settingsManager.settings?.['accessToken']
         if (accessToken) {
+            this.logger(`Found existing access token, using it to identify`)
             const identificationResult = await this.client.identifyApp({
                 name: APP_NAME,
                 accessToken
@@ -121,13 +122,15 @@ export class Application {
             }
         }
         else {
+            this.logger(`Could not find existing access token, so registering`)
             const registrationResult = await this.client.registerApp({
                 name: APP_NAME,
                 identify: true,
+                remote: true,
             })
             if (registrationResult.status === 'success') {
                 const accessToken = registrationResult.accessToken
-                this.settingsManager.setSetting('accessToken', accessToken)
+                await this.settingsManager.setSetting('accessToken', accessToken)
                 await this.settingsManager.saveSettings()
             }
             else {
